@@ -36,4 +36,5 @@ git apply "$crate.patch"
 rm "$crate.patch"
 git commit -a -m "patch action.yml to use $crate by default"
 
-git push -u origin "$crate"
+git push --force-with-lease "$(git rev-parse HEAD):refs/heads/$crate"
+git branch -D "$crate"
