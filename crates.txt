@@ -1,3 +1,5 @@
 hurl
 cargo-audit
 cargo-outdated
+clippy-sarif
+sarif-fmt

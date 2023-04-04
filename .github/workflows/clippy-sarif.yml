@@ -1,0 +1,16 @@
+name: clippy-sarif
+
+on:
+  push:
+    branches:
+      - clippy-sarif
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      crate: clippy-sarif
+    permissions:
+      contents: write
+    secrets: inherit

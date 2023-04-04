@@ -1,0 +1,16 @@
+name: sarif-fmt
+
+on:
+  push:
+    branches:
+      - sarif-fmt
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      crate: sarif-fmt
+    permissions:
+      contents: write
+    secrets: inherit
