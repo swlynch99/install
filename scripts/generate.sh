@@ -27,4 +27,5 @@ jobs:
 EOF
 done
 
+cp -f .github/custom/* .github/workflows
 cp -f .github/staging/* .github/workflows
