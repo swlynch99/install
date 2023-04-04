@@ -1,16 +1,16 @@
-name: cargo-expand
+name: sqlx-cli
 
 on:
   push:
     branches:
-      - cargo-expand
+      - sqlx-cli
   workflow_dispatch:
 
 jobs:
   build:
     uses: ./.github/workflows/build.yml
     with:
-      crate: cargo-expand
+      crate: sqlx-cli
     permissions:
       contents: write
     secrets: inherit

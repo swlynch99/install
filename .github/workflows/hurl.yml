@@ -1,16 +1,16 @@
-name: faketty
+name: hurl
 
 on:
   push:
     branches:
-      - faketty
+      - hurl
   workflow_dispatch:
 
 jobs:
   build:
     uses: ./.github/workflows/build.yml
     with:
-      crate: faketty
+      crate: hurl
     permissions:
       contents: write
     secrets: inherit

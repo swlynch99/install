@@ -1,0 +1,4 @@
+hurl
+sqlx-cli
+cargo-audit
+cargo-outdated
