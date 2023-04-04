@@ -11,22 +11,56 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Set some local variables
+      id: vars
+      shell: bash
+      run: |
+        echo "repository=https://github.com/swlynch99/install" >> $GITHUB_OUTPUT
+        echo "key-id=830334D6A6010C41"                         >> $GITHUB_OUTPUT
+        echo "binary=${{inputs.bin || inputs.crate}}"          >> $GITHUB_OUTPUT
+
     - name: Determine cargo bin directory
       run: echo "dir=$(dirname $(which cargo))" >> $GITHUB_OUTPUT
       shell: bash
       id: cargo
-    - name: Download ${{inputs.bin || inputs.crate}}
-      run: curl --output ${{steps.cargo.outputs.dir}}/${{inputs.bin || inputs.crate}} https://github.com/swlynch99/install/releases/download/${{inputs.crate}}/${{inputs.bin || inputs.crate}} --location --silent --show-error --fail --retry 5
+
+    - name: Download ${{steps.vars.outputs.binary}}
       shell: bash
-    - name: Download ${{inputs.bin || inputs.crate}}.sig
-      run: curl --output ${{runner.temp}}/${{inputs.bin || inputs.crate}}.sig https://github.com/swlynch99/install/releases/download/${{inputs.crate}}/${{inputs.bin || inputs.crate}}.sig --location --silent --show-error --fail --retry 5
+      run: |
+        curl --output ${{steps.cargo.outputs.dir}}/${{steps.vars.outputs.binary}} \
+          ${{steps.vars.outputs.repository}}/releases/download/${{inputs.crate}}/${{steps.vars.outputs.binary}} \
+          --location \
+          --silent \
+          --show-error \
+          --fail \
+          --retry 5
+
+    - name: Download ${{steps.vars.outputs.binary}}.sig
       shell: bash
+      run: |
+        curl --output ${{runner.temp}}/${{steps.vars.outputs.binary}}.sig \
+          ${{steps.vars.outputs.repository}}/releases/download/${{inputs.crate}}/${{steps.vars.outputs.binary}}.sig \
+          --location \
+          --silent \
+          --show-error \
+          --fail \
+          --retry 5
+    
     - name: Retrieve public key of signing key
+      shell: bash
       run: gpg --output ${{runner.temp}}/signing-key.gpg --yes --dearmor ${{github.action_path}}/signing-key.asc
-      shell: bash
+      
     - name: Verify gpg signature
-      run: gpg --no-default-keyring --keyring ${{runner.temp}}/signing-key.gpg --trusted-key 830334D6A6010C41 --verify ${{runner.temp}}/${{inputs.bin || inputs.crate}}.sig ${{steps.cargo.outputs.dir}}/${{inputs.bin || inputs.crate}}
       shell: bash
+      run: |
+        gpg \
+          --no-default-keyring \
+          --keyring ${{runner.temp}}/signing-key.gpg \
+          --trusted-key ${{steps.vars.outputs.key-id}} \
+          --verify ${{runner.temp}}/${{steps.vars.outputs.binary}}.sig \
+          ${{steps.cargo.outputs.dir}}/${{steps.vars.outputs.binary}}
+      
     - name: Set executable bit
-      run: chmod +x ${{steps.cargo.outputs.dir}}/${{inputs.bin || inputs.crate}}
       shell: bash
+      run: |
+        chmod +x ${{steps.cargo.outputs.dir}}/${{steps.vars.outputs.binary}}
