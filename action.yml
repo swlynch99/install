@@ -5,6 +5,7 @@ inputs:
   crate:
     description: Name of crate as published to crates.io
     required: true
+    default: hurl
   bin:
     description: Name of binary; default = same as crate name
     required: false
