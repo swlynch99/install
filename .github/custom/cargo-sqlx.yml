@@ -1,4 +1,4 @@
-name: sqlx-cli
+name: cargo-sqlx
 
 on:
   push:
