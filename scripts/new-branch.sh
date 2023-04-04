@@ -34,5 +34,6 @@ EOF
 
 git apply "$crate.patch"
 rm "$crate.patch"
+git commit -m "patch action.yml to use $crate by default"
 
 git push -u origin "$crate"
