@@ -5,6 +5,7 @@ inputs:
   crate:
     description: Name of crate as published to crates.io
     required: true
+    default: cargo-deb
   bin:
     description: Name of binary; default = same as crate name
     required: false
