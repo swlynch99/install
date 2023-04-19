@@ -1,5 +1,6 @@
 hurl
 cargo-audit
+cargo-deb
 cargo-outdated
 cargo-sweep
 clippy-sarif
